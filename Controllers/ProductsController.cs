@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BangazonAuth.Models;
-using BangazonAuth.Data;
-using BangazonAuth.Models.ProductViewModels;
+using Bangazon.Models;
+using Bangazon.Data;
+using Bangazon.Models.ProductViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
-namespace BangazonAuth.Controllers
+namespace Bangazon.Controllers
 {
     public class ProductsController : Controller
     {

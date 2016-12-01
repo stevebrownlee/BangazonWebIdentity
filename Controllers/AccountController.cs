@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using BangazonAuth.Models;
-using BangazonAuth.Models.AccountViewModels;
-using BangazonAuth.Services;
+using Bangazon.Models;
+using Bangazon.Models.AccountViewModels;
+using Bangazon.Services;
 
-namespace BangazonAuth.Controllers
+namespace Bangazon.Controllers
 {
     [Authorize]
     public class AccountController : Controller

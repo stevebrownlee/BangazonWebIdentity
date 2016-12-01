@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using BangazonAuth.Data;
-using BangazonAuth.Models;
-using BangazonAuth.Services;
+using Bangazon.Data;
+using Bangazon.Models;
+using Bangazon.Services;
 
-namespace BangazonAuth
+namespace Bangazon
 {
     public class Startup
     {

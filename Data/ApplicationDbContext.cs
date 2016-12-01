@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using BangazonAuth.Models;
+using Bangazon.Models;
 
-namespace BangazonAuth.Data
+namespace Bangazon.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

@@ -2,9 +2,9 @@ using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using BangazonAuth.Models;
+using Bangazon.Models;
 
-namespace BangazonAuth.Data
+namespace Bangazon.Data
 {
     public static class DbInitializer
     {

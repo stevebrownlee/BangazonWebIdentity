@@ -1,5 +1,5 @@
 {
-  "userSecretsId": "aspnet-BangazonAuth-5ab5207d-87c6-4825-aec2-e6b9b2b7fa1c",
+  "userSecretsId": "aspnet-Bangazon-5ab5207d-87c6-4825-aec2-e6b9b2b7fa1c",
 
   "dependencies": {
     "Microsoft.NETCore.App": {
@@ -98,6 +98,6 @@
   },
 
   "tooling": {
-    "defaultNamespace": "BangazonAuth"
+    "defaultNamespace": "Bangazon"
   }
 }

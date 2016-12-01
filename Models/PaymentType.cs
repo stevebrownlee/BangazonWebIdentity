@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 
-namespace BangazonAuth.Models
+namespace Bangazon.Models
 {
   public class PaymentType
   {

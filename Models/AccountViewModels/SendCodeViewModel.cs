@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace BangazonAuth.Models.AccountViewModels
+namespace Bangazon.Models.AccountViewModels
 {
     public class SendCodeViewModel
     {

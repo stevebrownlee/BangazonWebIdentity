@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using BangazonAuth.Models;
-using BangazonAuth.Models.ManageViewModels;
-using BangazonAuth.Services;
+using Bangazon.Models;
+using Bangazon.Models.ManageViewModels;
+using Bangazon.Services;
 
-namespace BangazonAuth.Controllers
+namespace Bangazon.Controllers
 {
     [Authorize]
     public class ManageController : Controller
