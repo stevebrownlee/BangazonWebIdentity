@@ -16,7 +16,7 @@ namespace Bangazon.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
 
         private ApplicationDbContext context;
-        public ProductsController(UserManager<ApplicationUser> userManager, ApplicationDbContext ctx)
+        public ProductsController( UserManager<ApplicationUser> userManager, ApplicationDbContext ctx)
         {
             _userManager = userManager;
             context = ctx;
@@ -86,7 +86,6 @@ namespace Bangazon.Controllers
                     product before adding it to the db context
                 */
                 var user = await GetCurrentUserAsync();
-                var userId = user?.Id;
                 product.User = user;
 
                 context.Add(product);
