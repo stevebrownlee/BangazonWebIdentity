@@ -3,15 +3,52 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Bangazon.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace Bangazon.Data
 {
     public static class DbInitializer
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static async void Initialize(IServiceProvider serviceProvider)
         {
             using (var context = new ApplicationDbContext(serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
             {
+                var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context), null, null, null, null, null);
+                var store = new RoleStore<IdentityRole>(context);
+                var userstore = new UserStore<ApplicationUser>(context);
+                var manager = new UserManager<ApplicationUser>(userstore, null, null, null, null, null, null, null, null);
+
+                if (!context.Roles.Any(r => r.Name == "Administrator"))
+                {
+                    var role = new IdentityRole { Name = "Administrator" };
+                    await roleManager.CreateAsync(role);
+                }
+
+                if (!context.Roles.Any(r => r.Name == "Member"))
+                {
+                    var role = new IdentityRole { Name = "Member" };
+                    await roleManager.CreateAsync(role);
+                }
+
+                if (!context.ApplicationUser.Any(u => u.FirstName == "admin"))
+                {
+                    //  This method will be called after migrating to the latest version.
+                    var passwordHash = new PasswordHasher<ApplicationUser>(null);
+                    ApplicationUser user = new ApplicationUser {
+                        FirstName = "admin",
+                        LastName = "admin",
+                        StreetAddress = "123 Infinity Way",
+                        UserName = "admin@admin.com",
+                        Email = "admin@admin.com"
+                    };
+                    string password = passwordHash.HashPassword(user, "Password@123");
+                    context.Users.Add(user);
+                    context.SaveChanges();
+                    await manager.AddToRoleAsync(user, "ADMINISTRATOR");
+                }
+
               // Look for any products.
               if (context.ProductType.Any())
               {
@@ -36,6 +73,12 @@ namespace Bangazon.Data
                   context.ProductType.Add(i);
               }
               context.SaveChanges();
+
+                
+
+
+
+
           }
        }
     }

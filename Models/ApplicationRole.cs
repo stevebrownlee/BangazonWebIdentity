@@ -9,19 +9,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace Bangazon.Models
 {
     // Add profile data for application users by adding properties to the ApplicationUser class
-    public class ApplicationUser : IdentityUser
+    public class ApplicationRole : IdentityRole
     {
-        [Required]
-        public string FirstName { get; set; }
-
-        [Required]
-        public string LastName { get; set; }
-
-        [Required]
-        public string StreetAddress { get; set; }
-        
-        public ICollection<Product> Products;
-        public ICollection<Order> Orders;
 
     }
 }

@@ -15,11 +15,11 @@ namespace Bangazon.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
-        private ApplicationDbContext context;
-        public ProductsController( UserManager<ApplicationUser> userManager, ApplicationDbContext ctx)
+        private ApplicationDbContext _context;
+        public ProductsController(ApplicationDbContext ctx, UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
-            context = ctx;
+            _context = ctx;
         }
 
         // This task retrieves the currently authenticated user
@@ -31,7 +31,7 @@ namespace Bangazon.Controllers
             ProductListViewModel model = new ProductListViewModel();
 
             // Set the properties of the view model
-            model.Products = await context.Product.ToListAsync(); 
+            model.Products = await _context.Product.ToListAsync(); 
             return View(model);
         }
 
@@ -47,7 +47,7 @@ namespace Bangazon.Controllers
             ProductDetail model = new ProductDetail();
 
             // Set the `Product` property of the view model
-            model.Product = await context.Product
+            model.Product = await _context.Product
                     .Include(prod => prod.User)
                     .SingleOrDefaultAsync(prod => prod.ProductId == id);
 
@@ -64,7 +64,7 @@ namespace Bangazon.Controllers
         [Authorize]
         public IActionResult Create()
         {
-            ProductCreateViewModel model = new ProductCreateViewModel(context);
+            ProductCreateViewModel model = new ProductCreateViewModel(_context);
 
             return View(model); 
         }
@@ -83,18 +83,20 @@ namespace Bangazon.Controllers
                 /*
                     If all other properties validation, then grab the 
                     currently authenticated user and assign it to the 
-                    product before adding it to the db context
+                    product before adding it to the db _context
                 */
                 var user = await GetCurrentUserAsync();
+                var userId = _userManager.GetUserIdAsync(user);
+                var claims = await _userManager.GetClaimsAsync(user);
                 product.User = user;
 
-                context.Add(product);
+                _context.Add(product);
 
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ProductCreateViewModel model = new ProductCreateViewModel(context);
+            ProductCreateViewModel model = new ProductCreateViewModel(_context);
             return View(model);
         }
 
@@ -103,12 +105,15 @@ namespace Bangazon.Controllers
             var model = new ProductTypesViewModel();
 
             // Get line items grouped by product id, including count
-            var counter = from product in context.Product
+            var counter = from product in _context.Product
                     group product by product.ProductTypeId into grouped
                     select new { grouped.Key, myCount = grouped.Count() };
 
+
+            var x = counter.ToList();
+
             // Build list of Product instances for display in view
-            model.ProductTypes = await (from type in context.ProductType
+            model.ProductTypes = await (from type in _context.ProductType
                     join a in counter on type.ProductTypeId equals a.Key 
                     select new ProductType {
                         ProductTypeId = type.ProductTypeId,

@@ -9,11 +9,13 @@ using Microsoft.Extensions.Logging;
 using Bangazon.Data;
 using Bangazon.Models;
 using Bangazon.Services;
+using System.Threading.Tasks;
 
 namespace Bangazon
 {
     public class Startup
     {
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
