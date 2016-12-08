@@ -18,7 +18,7 @@ namespace Bangazon.Data
                 var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context), null, null, null, null, null);
                 var store = new RoleStore<IdentityRole>(context);
                 var userstore = new UserStore<ApplicationUser>(context);
-                var manager = new UserManager<ApplicationUser>(userstore, null, null, null, null, null, null, null, null);
+                var usermanager = new UserManager<ApplicationUser>(userstore, null, new PasswordHasher<ApplicationUser>(null), null, null, null, null, null, null);
 
                 if (!context.Roles.Any(r => r.Name == "Administrator"))
                 {
@@ -32,22 +32,34 @@ namespace Bangazon.Data
                     await roleManager.CreateAsync(role);
                 }
 
-                if (!context.ApplicationUser.Any(u => u.FirstName == "admin"))
-                {
-                    //  This method will be called after migrating to the latest version.
-                    var passwordHash = new PasswordHasher<ApplicationUser>(null);
-                    ApplicationUser user = new ApplicationUser {
-                        FirstName = "admin",
-                        LastName = "admin",
-                        StreetAddress = "123 Infinity Way",
-                        UserName = "admin@admin.com",
-                        Email = "admin@admin.com"
-                    };
-                    string password = passwordHash.HashPassword(user, "Password@123");
-                    context.Users.Add(user);
-                    context.SaveChanges();
-                    await manager.AddToRoleAsync(user, "ADMINISTRATOR");
-                }
+                // if (!context.ApplicationUser.Any(u => u.FirstName == "admin"))
+                // {
+                //     //  This method will be called after migrating to the latest version.
+                //     var passwordHash = new PasswordHasher<ApplicationUser>(null);
+                //     ApplicationUser user = new ApplicationUser {
+                //         FirstName = "admin",
+                //         LastName = "admin",
+                //         StreetAddress = "123 Infinity Way",
+                //         UserName = "admin@admin.com",
+                //         Email = "admin@admin.com"
+                //     };
+                //     var result = await usermanager.CreateAsync(user, "Password@123");
+                //     // context.Users.Add(user);
+                //     // context.SaveChanges();
+
+                //     // var result = await usermanager.AddPasswordAsync(user, "Password@123");
+                //     // context.Users.Update(user);
+                //     // context.SaveChanges();
+
+                //     if (result.Succeeded)
+                //     {
+                //         await usermanager.AddToRoleAsync(user, "ADMINISTRATOR");
+                //     }
+
+
+                //     // string password = passwordHash.HashPassword(user, "Password@123");
+                //     // user.PasswordHash = password;
+                // }
 
               // Look for any products.
               if (context.ProductType.Any())

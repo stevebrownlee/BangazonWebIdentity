@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Bangazon.Models;
 using Bangazon.Models.AccountViewModels;
 using Bangazon.Services;
+using Bangazon.Data;
 
 namespace Bangazon.Controllers
 {
@@ -22,14 +23,17 @@ namespace Bangazon.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
+        private ApplicationDbContext _context;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
+            ApplicationDbContext ctx,
             ILoggerFactory loggerFactory)
         {
+            _context = ctx;
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
@@ -57,6 +61,7 @@ namespace Bangazon.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
+                
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
@@ -93,6 +98,33 @@ namespace Bangazon.Controllers
         {
             ViewData["ReturnUrl"] = returnUrl;
             return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Seed(string returnUrl = null)
+        {
+            var result = _userManager.FindByEmailAsync("admin@admin.com"); 
+            if (result == null)
+            {
+                //  This method will be called after migrating to the latest version.
+                var passwordHash = new PasswordHasher<ApplicationUser>(null);
+                ApplicationUser user = new ApplicationUser {
+                    FirstName = "admin",
+                    LastName = "admin",
+                    StreetAddress = "123 Infinity Way",
+                    UserName = "admin@admin.com",
+                    Email = "admin@admin.com"
+                };
+                var makeOne = await _userManager.CreateAsync(user, "Password@123");
+
+                if (makeOne.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, "ADMINISTRATOR");
+                }
+            }
+
+            return Ok();
         }
 
         //
