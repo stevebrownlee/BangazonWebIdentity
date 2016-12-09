@@ -102,13 +102,15 @@ namespace Bangazon.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Seed(string returnUrl = null)
+        public async Task<IActionResult> Seed()
         {
-            var result = _userManager.FindByEmailAsync("admin@admin.com"); 
+            // Check if there is  default admin user already
+            var result = await _userManager.FindByEmailAsync("admin@admin.com"); 
+
+            // There is no admin user
             if (result == null)
             {
-                //  This method will be called after migrating to the latest version.
-                var passwordHash = new PasswordHasher<ApplicationUser>(null);
+                // Create an admin user instance
                 ApplicationUser user = new ApplicationUser {
                     FirstName = "admin",
                     LastName = "admin",
@@ -116,15 +118,20 @@ namespace Bangazon.Controllers
                     UserName = "admin@admin.com",
                     Email = "admin@admin.com"
                 };
+
+                // Attempt to create the user in the database
                 var makeOne = await _userManager.CreateAsync(user, "Password@123");
 
+                // Creation succeed check
                 if (makeOne.Succeeded)
                 {
+                    // Assign the admin user to the Administrator role that was
+                    // created in DbInitialize
                     await _userManager.AddToRoleAsync(user, "ADMINISTRATOR");
                 }
             }
 
-            return Ok();
+            return View();
         }
 
         //

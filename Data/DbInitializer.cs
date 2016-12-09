@@ -44,12 +44,12 @@ namespace Bangazon.Data
                 //         Email = "admin@admin.com"
                 //     };
                 //     var result = await usermanager.CreateAsync(user, "Password@123");
-                //     // context.Users.Add(user);
-                //     // context.SaveChanges();
+                //     context.Users.Add(user);
+                //     context.SaveChanges();
 
-                //     // var result = await usermanager.AddPasswordAsync(user, "Password@123");
-                //     // context.Users.Update(user);
-                //     // context.SaveChanges();
+                //     var result = await usermanager.AddPasswordAsync(user, "Password@123");
+                //     context.Users.Update(user);
+                //     context.SaveChanges();
 
                 //     if (result.Succeeded)
                 //     {
@@ -57,8 +57,8 @@ namespace Bangazon.Data
                 //     }
 
 
-                //     // string password = passwordHash.HashPassword(user, "Password@123");
-                //     // user.PasswordHash = password;
+                //     string password = passwordHash.HashPassword(user, "Password@123");
+                //     user.PasswordHash = password;
                 // }
 
               // Look for any products.
