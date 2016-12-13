@@ -86,8 +86,6 @@ namespace Bangazon.Controllers
                     product before adding it to the db _context
                 */
                 var user = await GetCurrentUserAsync();
-                var userId = _userManager.GetUserIdAsync(user);
-                var claims = await _userManager.GetClaimsAsync(user);
                 product.User = user;
 
                 _context.Add(product);
