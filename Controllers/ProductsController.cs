@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
+using System;
 
 namespace Bangazon.Controllers
 {
@@ -62,9 +64,22 @@ namespace Bangazon.Controllers
 
         [HttpGet]
         [Authorize]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             ProductCreateViewModel model = new ProductCreateViewModel(_context);
+
+            // Get current user
+            var user = await GetCurrentUserAsync();
+
+            // Get roles assigned to user (should only be one)
+            var roles = ((ClaimsIdentity)User.Identity).Claims
+                .Where(c => c.Type == ClaimTypes.Role)
+                .Select(c => c.Value);
+
+            // Attach the user role to the view model
+            foreach (var role in roles) {
+                model.UserRole = role.ToString();
+            }
 
             return View(model); 
         }
@@ -86,6 +101,12 @@ namespace Bangazon.Controllers
                     product before adding it to the db _context
                 */
                 var user = await GetCurrentUserAsync();
+                var roles = ((ClaimsIdentity)User.Identity).Claims
+                    .Where(c => c.Type == ClaimTypes.Role)
+                    .Select(c => c.Value);
+
+                Console.WriteLine("roles\n\n\n\n");
+                Console.WriteLine(roles);
                 product.User = user;
 
                 _context.Add(product);
@@ -106,9 +127,6 @@ namespace Bangazon.Controllers
             var counter = from product in _context.Product
                     group product by product.ProductTypeId into grouped
                     select new { grouped.Key, myCount = grouped.Count() };
-
-
-            var x = counter.ToList();
 
             // Build list of Product instances for display in view
             model.ProductTypes = await (from type in _context.ProductType

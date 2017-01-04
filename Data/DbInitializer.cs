@@ -32,21 +32,23 @@ namespace Bangazon.Data
                     await roleManager.CreateAsync(role);
                 }
 
+                // var hasher = new PasswordHasher<ApplicationUser>();
+
                 // if (!context.ApplicationUser.Any(u => u.FirstName == "admin"))
                 // {
                 //     //  This method will be called after migrating to the latest version.
-                //     var passwordHash = new PasswordHasher<ApplicationUser>(null);
                 //     ApplicationUser user = new ApplicationUser {
                 //         FirstName = "admin",
                 //         LastName = "admin",
                 //         StreetAddress = "123 Infinity Way",
                 //         UserName = "admin@admin.com",
-                //         Email = "admin@admin.com"
+                //         Email = "admin@admin.com",
                 //     };
                 //     var result = await usermanager.CreateAsync(user, "Password@123");
                 //     context.Users.Add(user);
                 //     context.SaveChanges();
 
+                //     var hashedPassword = hasher.HashPassword(user, "Password@123")
                 //     var result = await usermanager.AddPasswordAsync(user, "Password@123");
                 //     context.Users.Update(user);
                 //     context.SaveChanges();
