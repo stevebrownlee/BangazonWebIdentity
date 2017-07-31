@@ -22,6 +22,7 @@ namespace Bangazon.Controllers
 
         public IActionResult Index()
         {
+            // Add the grouped products, by product type, to the ViewBag
             ViewBag["types"] = from t in context.ProductType
                 join p in context.Product
                 on t.ProductTypeId equals p.ProductTypeId
@@ -43,11 +44,15 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
-            var model = new ProductTypeDetailViewModel();
+            /*
+                Create instance of view model
+             */
+            // ProductTypeDetailViewModel model;
 
-            var productType = await context.ProductType
-                                .Where(t => t.ProductTypeId == type)
-                                .SingleOrDefaultAsync();
+            /*
+                Write LINQ statement to get requested product type
+             */
+            IQueryable<ProductType> productType;
 
             // If product not found, return 404
             if (productType == null)
@@ -55,19 +60,15 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
-            model.Products = await (from t in context.Product
-                where t.ProductTypeId == type
-                select t).ToListAsync();
+            /*
+                Add corresponding products to the view model
+             */
+            // model.Products = ???
 
+            // Add the product type to the view model
             model.ProductType = productType;
 
             return View(model);
-        }
-
-        [HttpGet]
-        public IActionResult Create()
-        {
-            return View(); 
         }
     }
 }
