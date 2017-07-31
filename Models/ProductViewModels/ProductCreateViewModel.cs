@@ -9,9 +9,6 @@ namespace Bangazon.Models.ProductViewModels
   {
     public List<SelectListItem> ProductTypeId { get; set; }
     public Product Product { get; set; }
-
-    public string UserRole { get; set; }
-
     public ProductCreateViewModel(ApplicationDbContext ctx) 
     { 
 

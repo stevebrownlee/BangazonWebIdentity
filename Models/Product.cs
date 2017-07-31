@@ -17,6 +17,7 @@ namespace Bangazon.Models
 
     [Required]
     [DataType(DataType.Date)]
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public DateTime DateCreated {get;set;}
 
     [Required]
@@ -35,14 +36,11 @@ namespace Bangazon.Models
     public virtual ApplicationUser User { get; set; }
 
     [Required]
-    [Display(Name="Category")]
     public int ProductTypeId { get; set; }
     
     [Display(Name="Category")]
     public ProductType ProductType { get; set; }
     
-    public ICollection<LineItem> LineItems;
-
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
         if (Price > 10000)

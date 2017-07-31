@@ -11,89 +11,35 @@ namespace Bangazon.Data
 {
     public static class DbInitializer
     {
-        public static async void Initialize(IServiceProvider serviceProvider)
+        public static void Initialize(IServiceProvider serviceProvider)
         {
             using (var context = new ApplicationDbContext(serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
             {
-                var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context), null, null, null, null, null);
-                var store = new RoleStore<IdentityRole>(context);
-                var userstore = new UserStore<ApplicationUser>(context);
-                var usermanager = new UserManager<ApplicationUser>(userstore, null, new PasswordHasher<ApplicationUser>(null), null, null, null, null, null, null);
-
-                if (!context.Roles.Any(r => r.Name == "Administrator"))
+                // Look for any products.
+                if (context.ProductType.Any())
                 {
-                    var role = new IdentityRole { Name = "Administrator" };
-                    await roleManager.CreateAsync(role);
+                    return;   // DB has been seeded
                 }
 
-                if (!context.Roles.Any(r => r.Name == "Member"))
+                var productTypes = new ProductType[]
                 {
-                    var role = new IdentityRole { Name = "Member" };
-                    await roleManager.CreateAsync(role);
+                    new ProductType { 
+                        Label = "Electronics"
+                    },
+                    new ProductType { 
+                        Label = "Appliances"
+                    },
+                    new ProductType { 
+                        Label = "Housewares"
+                    },
+                };
+
+                foreach (ProductType i in productTypes)
+                {
+                    context.ProductType.Add(i);
                 }
-
-                // var hasher = new PasswordHasher<ApplicationUser>();
-
-                // if (!context.ApplicationUser.Any(u => u.FirstName == "admin"))
-                // {
-                //     //  This method will be called after migrating to the latest version.
-                //     ApplicationUser user = new ApplicationUser {
-                //         FirstName = "admin",
-                //         LastName = "admin",
-                //         StreetAddress = "123 Infinity Way",
-                //         UserName = "admin@admin.com",
-                //         Email = "admin@admin.com",
-                //     };
-                //     var result = await usermanager.CreateAsync(user, "Password@123");
-                //     context.Users.Add(user);
-                //     context.SaveChanges();
-
-                //     var hashedPassword = hasher.HashPassword(user, "Password@123")
-                //     var result = await usermanager.AddPasswordAsync(user, "Password@123");
-                //     context.Users.Update(user);
-                //     context.SaveChanges();
-
-                //     if (result.Succeeded)
-                //     {
-                //         await usermanager.AddToRoleAsync(user, "ADMINISTRATOR");
-                //     }
-
-
-                //     string password = passwordHash.HashPassword(user, "Password@123");
-                //     user.PasswordHash = password;
-                // }
-
-              // Look for any products.
-              if (context.ProductType.Any())
-              {
-                  return;   // DB has been seeded
-              }
-
-              var productTypes = new ProductType[]
-              {
-                  new ProductType { 
-                      Label = "Electronics"
-                  },
-                  new ProductType { 
-                      Label = "Appliances"
-                  },
-                  new ProductType { 
-                      Label = "Housewares"
-                  },
-              };
-
-              foreach (ProductType i in productTypes)
-              {
-                  context.ProductType.Add(i);
-              }
-              context.SaveChanges();
-
-                
-
-
-
-
-          }
+                context.SaveChanges();
+            }
        }
     }
 }

@@ -46,7 +46,7 @@ namespace Bangazon.Controllers
             }
 
             // Create new instance of view model
-            ProductDetail model = new ProductDetail();
+            ProductDetailViewModel model = new ProductDetailViewModel();
 
             // Set the `Product` property of the view model
             model.Product = await _context.Product
@@ -70,16 +70,6 @@ namespace Bangazon.Controllers
 
             // Get current user
             var user = await GetCurrentUserAsync();
-
-            // Get roles assigned to user (should only be one)
-            var roles = ((ClaimsIdentity)User.Identity).Claims
-                .Where(c => c.Type == ClaimTypes.Role)
-                .Select(c => c.Value);
-
-            // Attach the user role to the view model
-            foreach (var role in roles) {
-                model.UserRole = role.ToString();
-            }
 
             return View(model); 
         }
@@ -105,8 +95,7 @@ namespace Bangazon.Controllers
                     .Where(c => c.Type == ClaimTypes.Role)
                     .Select(c => c.Value);
 
-                Console.WriteLine("roles\n\n\n\n");
-                Console.WriteLine(roles);
+                Console.WriteLine($"roles\n\n\n\n{roles}");
                 product.User = user;
 
                 _context.Add(product);
