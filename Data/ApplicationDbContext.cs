@@ -10,9 +10,7 @@ namespace Bangazon.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext(DbContextOptions options)
-            : base(options)
-        {}
+        public ApplicationDbContext(DbContextOptions options):base(options) {}
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<ApplicationRole> ApplicationRole { get; set; }
         public DbSet<Product> Product { get; set; }
