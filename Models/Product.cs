@@ -35,10 +35,9 @@ namespace Bangazon.Models
     public virtual ApplicationUser User { get; set; }
 
     [Required]
-    [Display(Name="Category")]
+    [Display(Name="Product Category")]
     public int ProductTypeId { get; set; }
     
-    [Display(Name="Category")]
     public ProductType ProductType { get; set; }
     
     public ICollection<LineItem> LineItems;

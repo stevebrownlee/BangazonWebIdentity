@@ -7,7 +7,7 @@ namespace Bangazon.Models.ProductViewModels
 {
   public class ProductCreateViewModel
   {
-    public List<SelectListItem> ProductTypeId { get; set; }
+    public List<SelectListItem> ProductTypes { get; set; }
     public Product Product { get; set; }
 
     public string UserRole { get; set; }
@@ -15,7 +15,7 @@ namespace Bangazon.Models.ProductViewModels
     public ProductCreateViewModel(ApplicationDbContext ctx) 
     { 
 
-        this.ProductTypeId = ctx.ProductType
+        this.ProductTypes = ctx.ProductType
                                 .OrderBy(l => l.Label)
                                 .AsEnumerable()
                                 .Select(li => new SelectListItem { 
@@ -23,7 +23,7 @@ namespace Bangazon.Models.ProductViewModels
                                     Value = li.ProductTypeId.ToString()
                                 }).ToList();
 
-        this.ProductTypeId.Insert(0, new SelectListItem { 
+        this.ProductTypes.Insert(0, new SelectListItem { 
             Text = "Choose category...",
             Value = "0"
         }); 
