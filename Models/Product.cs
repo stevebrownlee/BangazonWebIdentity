@@ -45,10 +45,6 @@ namespace Bangazon.Models
   }
   public class NonLuxuryProductAttribute : ValidationAttribute
   {
-      public NonLuxuryProductAttribute()
-      {
-      }
-
       protected override ValidationResult IsValid(object value, ValidationContext validationContext)
       {
           Product product = (Product)validationContext.ObjectInstance;
