@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Bangazon.Models;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Bangazon.Data
 {
@@ -29,9 +30,21 @@ namespace Bangazon.Data
                 .Property(b => b.DateCreated)
                 .HasDefaultValueSql("strftime('%Y-%m-%d %H:%M:%S')");
 
+            // Restrict deletion of related order when LineItem entry is removed
+            modelBuilder.Entity<Order>()
+                .HasMany(o => o.LineItems)
+                .WithOne(l => l.Order)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Product>()
                 .Property(b => b.DateCreated)
                 .HasDefaultValueSql("strftime('%Y-%m-%d %H:%M:%S')");
+
+            // Restrict deletion of related product when LineItem entry is removed
+            modelBuilder.Entity<Product>()
+                .HasMany(o => o.LineItems)
+                .WithOne(l => l.Product)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<PaymentType>()
                 .Property(b => b.DateCreated)
