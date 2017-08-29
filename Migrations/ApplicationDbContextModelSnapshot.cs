@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Bangazon.Data;
 
-namespace Bangazon.Migrations
+namespace BangazonAuth.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -13,7 +13,7 @@ namespace Bangazon.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "1.0.0-rtm-21431");
+                .HasAnnotation("ProductVersion", "1.0.3");
 
             modelBuilder.Entity("Bangazon.Models.ApplicationUser", b =>
                 {
@@ -24,12 +24,8 @@ namespace Bangazon.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<DateTime>("DateCreated")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasDefaultValueSql("strftime('%Y-%m-%d %H:%M:%S')");
-
                     b.Property<string>("Email")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
 
@@ -44,10 +40,10 @@ namespace Bangazon.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("NormalizedUserName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("PasswordHash");
 
@@ -63,7 +59,7 @@ namespace Bangazon.Migrations
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -126,7 +122,7 @@ namespace Bangazon.Migrations
 
                     b.Property<string>("AccountNumber")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 20);
+                        .HasMaxLength(20);
 
                     b.Property<DateTime>("DateCreated")
                         .ValueGeneratedOnAddOrUpdate()
@@ -134,7 +130,7 @@ namespace Bangazon.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 12);
+                        .HasMaxLength(12);
 
                     b.Property<string>("UserId")
                         .IsRequired();
@@ -157,7 +153,7 @@ namespace Bangazon.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.Property<double>("Price");
 
@@ -165,7 +161,7 @@ namespace Bangazon.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 55);
+                        .HasMaxLength(55);
 
                     b.Property<string>("UserId")
                         .IsRequired();
@@ -186,7 +182,7 @@ namespace Bangazon.Migrations
 
                     b.Property<string>("Label")
                         .IsRequired()
-                        .HasAnnotation("MaxLength", 255);
+                        .HasMaxLength(255);
 
                     b.HasKey("ProductTypeId");
 
@@ -200,11 +196,14 @@ namespace Bangazon.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired();
+
                     b.Property<string>("Name")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.Property<string>("NormalizedName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasMaxLength(256);
 
                     b.HasKey("Id");
 
@@ -212,6 +211,8 @@ namespace Bangazon.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
@@ -300,17 +301,25 @@ namespace Bangazon.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Bangazon.Models.ApplicationRole", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole");
+
+
+                    b.ToTable("ApplicationRole");
+
+                    b.HasDiscriminator().HasValue("ApplicationRole");
+                });
+
             modelBuilder.Entity("Bangazon.Models.LineItem", b =>
                 {
                     b.HasOne("Bangazon.Models.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany("LineItems")
+                        .HasForeignKey("OrderId");
 
                     b.HasOne("Bangazon.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany("LineItems")
+                        .HasForeignKey("ProductId");
                 });
 
             modelBuilder.Entity("Bangazon.Models.Order", b =>
@@ -320,7 +329,7 @@ namespace Bangazon.Migrations
                         .HasForeignKey("PaymentTypeId");
 
                     b.HasOne("Bangazon.Models.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("UserId");
                 });
 
@@ -335,12 +344,12 @@ namespace Bangazon.Migrations
             modelBuilder.Entity("Bangazon.Models.Product", b =>
                 {
                     b.HasOne("Bangazon.Models.ProductType", "ProductType")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("ProductTypeId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Bangazon.Models.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
