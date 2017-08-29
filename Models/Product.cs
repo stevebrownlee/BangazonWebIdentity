@@ -11,9 +11,6 @@ namespace Bangazon.Models
     [Key]
     public int ProductId {get;set;}
 
-    [NotMapped]
-    public int Quantity { get; set; }
-
     [Required]
     [DataType(DataType.Date)]
     public DateTime DateCreated {get;set;}
@@ -32,7 +29,7 @@ namespace Bangazon.Models
     public double Price { get; set; }
 
     [Required]
-    public virtual ApplicationUser User { get; set; }
+    public ApplicationUser User { get; set; }
 
     [Required]
     [Display(Name="Product Category")]
@@ -40,7 +37,7 @@ namespace Bangazon.Models
     
     public ProductType ProductType { get; set; }
     
-    public ICollection<LineItem> LineItems;
+    public virtual ICollection<LineItem> LineItems { get; set; }
 
   }
   public class NonLuxuryProductAttribute : ValidationAttribute

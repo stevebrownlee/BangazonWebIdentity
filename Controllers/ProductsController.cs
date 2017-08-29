@@ -64,12 +64,9 @@ namespace Bangazon.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             ProductCreateViewModel model = new ProductCreateViewModel(_context);
-
-            // Get current user
-            var user = await GetCurrentUserAsync();
 
             // Get roles assigned to user (should only be one)
             var roles = ((ClaimsIdentity)User.Identity).Claims
@@ -101,12 +98,6 @@ namespace Bangazon.Controllers
                     product before adding it to the db _context
                 */
                 var user = await GetCurrentUserAsync();
-                var roles = ((ClaimsIdentity)User.Identity).Claims
-                    .Where(c => c.Type == ClaimTypes.Role)
-                    .Select(c => c.Value);
-
-                Console.WriteLine("roles\n\n\n\n");
-                Console.WriteLine(roles);
                 product.User = user;
 
                 _context.Add(product);
