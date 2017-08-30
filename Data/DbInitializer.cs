@@ -52,6 +52,36 @@ namespace Bangazon.Data
                 }
 
               // Look for any products.
+              if (context.PaymentType.Any())
+              {
+                  return;   // DB has been seeded
+              }
+
+              var paymentTypes = new PaymentType[]
+              {
+                  new PaymentType { 
+                      Description = "Visa",
+                      AccountNumber = "102939475751",
+                      User = context.ApplicationUser.Single(u => u.Email == "admin@admin.com")
+                  },
+                  new PaymentType { 
+                      Description = "Amex",
+                      AccountNumber = "756483920187",
+                      User = context.ApplicationUser.Single(u => u.Email == "admin@admin.com")
+                  }
+              };
+
+              foreach (PaymentType i in paymentTypes)
+              {
+                  context.PaymentType.Add(i);
+              }
+              context.SaveChanges();
+
+
+
+
+
+
               if (context.ProductType.Any())
               {
                   return;   // DB has been seeded
@@ -78,6 +108,15 @@ namespace Bangazon.Data
                   context.ProductType.Add(i);
               }
               context.SaveChanges();
+
+
+
+
+
+              if (context.Product.Any())
+              {
+                  return;   // DB has been seeded
+              }
 
               var products = new Product[]
               {
