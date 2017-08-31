@@ -52,110 +52,104 @@ namespace Bangazon.Data
                 }
 
               // Look for any products.
-              if (context.PaymentType.Any())
+              if (!context.PaymentType.Any())
               {
-                  return;   // DB has been seeded
+                var paymentTypes = new PaymentType[]
+                {
+                    new PaymentType { 
+                        Description = "Visa",
+                        AccountNumber = "102939475751",
+                        User = context.ApplicationUser.Single(u => u.Email == "admin@admin.com")
+                    },
+                    new PaymentType { 
+                        Description = "Amex",
+                        AccountNumber = "756483920187",
+                        User = context.ApplicationUser.Single(u => u.Email == "admin@admin.com")
+                    }
+                };
+
+                foreach (PaymentType i in paymentTypes)
+                {
+                    context.PaymentType.Add(i);
+                }
+                context.SaveChanges();
               }
 
-              var paymentTypes = new PaymentType[]
+
+
+
+
+
+              if (!context.ProductType.Any())
               {
-                  new PaymentType { 
-                      Description = "Visa",
-                      AccountNumber = "102939475751",
-                      User = context.ApplicationUser.Single(u => u.Email == "admin@admin.com")
-                  },
-                  new PaymentType { 
-                      Description = "Amex",
-                      AccountNumber = "756483920187",
-                      User = context.ApplicationUser.Single(u => u.Email == "admin@admin.com")
-                  }
-              };
+                var productTypes = new ProductType[]
+                {
+                    new ProductType { 
+                        Label = "Electronics"
+                    },
+                    new ProductType { 
+                        Label = "Appliances"
+                    },
+                    new ProductType { 
+                        Label = "Sporting Goods"
+                    },
+                    new ProductType { 
+                        Label = "Housewares"
+                    },
+                };
 
-              foreach (PaymentType i in paymentTypes)
-              {
-                  context.PaymentType.Add(i);
-              }
-              context.SaveChanges();
-
-
-
-
-
-
-              if (context.ProductType.Any())
-              {
-                  return;   // DB has been seeded
-              }
-
-              var productTypes = new ProductType[]
-              {
-                  new ProductType { 
-                      Label = "Electronics"
-                  },
-                  new ProductType { 
-                      Label = "Appliances"
-                  },
-                  new ProductType { 
-                      Label = "Sporting Goods"
-                  },
-                  new ProductType { 
-                      Label = "Housewares"
-                  },
-              };
-
-              foreach (ProductType i in productTypes)
-              {
-                  context.ProductType.Add(i);
-              }
-              context.SaveChanges();
-
-
-
-
-
-              if (context.Product.Any())
-              {
-                  return;   // DB has been seeded
+                foreach (ProductType i in productTypes)
+                {
+                    context.ProductType.Add(i);
+                }
+                context.SaveChanges();
               }
 
-              var products = new Product[]
-              {
-                  new Product { 
-                      Title = "Kite",
-                      Description = "It flies high",
-                      Price = 9.99,
-                      ProductType = context.ProductType.Single(t => t.Label == "Sporting Goods"),
-                      User = context.ApplicationUser.Single(u => u.Email == "admin@admin.com")
-                  },
-                  new Product { 
-                      Title = "Curtains",
-                      Description = "They make it dark",
-                      Price = 140.00,
-                      ProductTypeId = context.ProductType.Single(t => t.Label == "Housewares").ProductTypeId,
-                      User = context.ApplicationUser.Single(u => u.Email == "admin@admin.com")
-                  },
-                  new Product { 
-                      Title = "Macbook Pro",
-                      Description = "It's powerful",
-                      Price = 1278.00,
-                      ProductTypeId = context.ProductType.Single(t => t.Label == "Electronics").ProductTypeId,
-                      User = context.ApplicationUser.Single(u => u.Email == "admin@admin.com")
-                  },
-                  new Product { 
-                      Title = "Refrigerator",
-                      Description = "It keep things cool",
-                      Price = 1149.00,
-                      ProductTypeId = context.ProductType.Single(t => t.Label == "Appliances").ProductTypeId,
-                      User = context.ApplicationUser.Single(u => u.Email == "admin@admin.com")
-                  },
-              };
 
-              foreach (Product i in products)
+
+
+
+              if (!context.Product.Any())
               {
-                  context.Product.Add(i);
+                var products = new Product[]
+                {
+                    new Product { 
+                        Title = "Kite",
+                        Description = "It flies high",
+                        Price = 9.99,
+                        ProductType = context.ProductType.Single(t => t.Label == "Sporting Goods"),
+                        User = context.ApplicationUser.Single(u => u.Email == "admin@admin.com")
+                    },
+                    new Product { 
+                        Title = "Curtains",
+                        Description = "They make it dark",
+                        Price = 140.00,
+                        ProductTypeId = context.ProductType.Single(t => t.Label == "Housewares").ProductTypeId,
+                        User = context.ApplicationUser.Single(u => u.Email == "admin@admin.com")
+                    },
+                    new Product { 
+                        Title = "Macbook Pro",
+                        Description = "It's powerful",
+                        Price = 1278.00,
+                        ProductTypeId = context.ProductType.Single(t => t.Label == "Electronics").ProductTypeId,
+                        User = context.ApplicationUser.Single(u => u.Email == "admin@admin.com")
+                    },
+                    new Product { 
+                        Title = "Refrigerator",
+                        Description = "It keep things cool",
+                        Price = 1149.00,
+                        ProductTypeId = context.ProductType.Single(t => t.Label == "Appliances").ProductTypeId,
+                        User = context.ApplicationUser.Single(u => u.Email == "admin@admin.com")
+                    },
+                };
+
+                foreach (Product i in products)
+                {
+                    context.Product.Add(i);
+                }
+
+                context.SaveChanges();
               }
-
-              context.SaveChanges();
 
           }
        }
