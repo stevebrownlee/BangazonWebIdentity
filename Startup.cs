@@ -5,11 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
 using Bangazon.Data;
 using Bangazon.Models;
 using Bangazon.Services;
-using System.Threading.Tasks;
 
 namespace Bangazon
 {
