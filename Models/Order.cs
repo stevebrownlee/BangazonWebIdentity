@@ -24,6 +24,6 @@ namespace Bangazon.Models
     public int? PaymentTypeId {get;set;}
     public PaymentType PaymentType {get;set;} 
 
-    public ICollection<LineItem> LineItems { get; set; }
+    public virtual ICollection<LineItem> LineItems { get; set; }
   }
 }

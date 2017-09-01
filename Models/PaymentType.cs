@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -25,5 +26,7 @@ namespace Bangazon.Models
 
     [Required]
     public ApplicationUser User { get; set; }
+
+    public ICollection<Order> Orders { get; set; }
   }
 }
