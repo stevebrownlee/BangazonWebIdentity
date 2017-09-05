@@ -2,18 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Bangazon.Models;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Bangazon.Models;
 
 namespace Bangazon.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions options):base(options) {}
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
-        public DbSet<ApplicationRole> ApplicationRole { get; set; }
+        public DbSet<ApplicationRole> Roles { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<Order> Order { get; set; }
         public DbSet<PaymentType> PaymentType { get; set; }
