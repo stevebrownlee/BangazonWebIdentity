@@ -11,7 +11,7 @@ namespace Bangazon.Data
 {
     public static class DbInitializer
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public async static void Initialize(IServiceProvider serviceProvider)
         {
             using (var context = new ApplicationDbContext(serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
             {
@@ -21,25 +21,6 @@ namespace Bangazon.Data
                 if (!context.Roles.Any(r => r.Name == "Administrator"))
                 {
                     var role = new IdentityRole { Name = "Administrator", NormalizedName = "Administrator" };
-                    await roleStore.CreateAsync(role);
-                }
-
-                var productTypes = new ProductType[]
-                {
-                    new ProductType { 
-                        Label = "Electronics"
-                    },
-                    new ProductType { 
-                        Label = "Appliances"
-                    },
-                    new ProductType { 
-                        Label = "Housewares"
-                    },
-                };
-
-                foreach (ProductType i in productTypes)
-                {
-                    var role = new IdentityRole { Name = "Member", NormalizedName = "Member" };
                     await roleStore.CreateAsync(role);
                 }
 
@@ -64,9 +45,10 @@ namespace Bangazon.Data
                     await userstore.AddToRoleAsync(user, "Administrator");
                 }
 
-              // Look for any products.
-              if (!context.PaymentType.Any())
-              {
+
+
+                if (!context.PaymentType.Any())
+                {
                 var paymentTypes = new PaymentType[]
                 {
                     new PaymentType { 
@@ -86,7 +68,7 @@ namespace Bangazon.Data
                     context.PaymentType.Add(i);
                 }
                 context.SaveChanges();
-              }
+                }
 
 
 
