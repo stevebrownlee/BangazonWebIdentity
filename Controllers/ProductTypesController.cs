@@ -13,11 +13,11 @@ namespace Bangazon.Controllers
 {
     public class ProductTypesController : Controller
     {
-        private ApplicationDbContext context;
+        private ApplicationDbContext _context;
 
         public ProductTypesController(ApplicationDbContext ctx)
         {
-            context = ctx;
+            _context = ctx;
         }
 
         public IActionResult Index()
@@ -36,14 +36,10 @@ namespace Bangazon.Controllers
             }
 
             /*
-                Create instance of view model
-             */
-            // ProductTypeDetailViewModel model;
-
-            /*
                 Write LINQ statement to get requested product type
              */
-            IQueryable<ProductType> productType;
+            ProductType productType = await _context.ProductType
+                .SingleOrDefaultAsync(t => t.ProductTypeId == type);
 
             // If product not found, return 404
             if (productType == null)
@@ -54,12 +50,7 @@ namespace Bangazon.Controllers
             /*
                 Add corresponding products to the view model
              */
-            // model.Products = ???
-
-            // Add the product type to the view model
-            model.ProductType = productType;
-
-            return View(model);
+            return View();
         }
     }
 }
