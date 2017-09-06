@@ -22,15 +22,6 @@ namespace Bangazon.Controllers
 
         public IActionResult Index()
         {
-            // Add the grouped products, by product type, to the ViewBag
-            ViewBag["types"] = from t in context.ProductType
-                join p in context.Product
-                on t.ProductTypeId equals p.ProductTypeId
-                group new { t, p } by new { t.Label } into grouped
-                select new {
-                    TypeName = grouped.Key.Label,
-                    ProductCount = grouped.Select(x => x.p.ProductId).Count()
-                };
 
             return View();
         }

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using System;
+using BangazonAuth.Models;
 
 namespace Bangazon.Controllers
 {
@@ -64,12 +65,19 @@ namespace Bangazon.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
             ProductCreateViewModel model = new ProductCreateViewModel(_context);
 
-            // Get current user
-            var user = await GetCurrentUserAsync();
+            // Get roles assigned to user (should only be one)
+            var roles = ((ClaimsIdentity)User.Identity).Claims
+                .Where(c => c.Type == ClaimTypes.Role)
+                .Select(c => c.Value);
+
+            // Attach the user role to the view model
+            foreach (var role in roles) {
+                model.UserRole = role.ToString();
+            }
 
             return View(model); 
         }
@@ -91,11 +99,6 @@ namespace Bangazon.Controllers
                     product before adding it to the db _context
                 */
                 var user = await GetCurrentUserAsync();
-                var roles = ((ClaimsIdentity)User.Identity).Claims
-                    .Where(c => c.Type == ClaimTypes.Role)
-                    .Select(c => c.Value);
-
-                Console.WriteLine($"roles\n\n\n\n{roles}");
                 product.User = user;
 
                 _context.Add(product);
@@ -112,19 +115,20 @@ namespace Bangazon.Controllers
         {
             var model = new ProductTypesViewModel();
 
-            // Get line items grouped by product id, including count
-            var counter = from product in _context.Product
-                    group product by product.ProductTypeId into grouped
-                    select new { grouped.Key, myCount = grouped.Count() };
-
             // Build list of Product instances for display in view
-            model.ProductTypes = await (from type in _context.ProductType
-                    join a in counter on type.ProductTypeId equals a.Key 
-                    select new ProductType {
-                        ProductTypeId = type.ProductTypeId,
-                        Label = type.Label, 
-                        Quantity = a.myCount 
-                    }).ToListAsync();
+            // LINQ is awesome
+            model.GroupedProducts = await (
+                from t in _context.ProductType
+                join p in _context.Product
+                on t.ProductTypeId equals p.ProductTypeId
+                group new { t, p } by new { t.ProductTypeId, t.Label } into grouped
+                select new GroupedProducts
+                {
+                    TypeId = grouped.Key.ProductTypeId,
+                    TypeName = grouped.Key.Label,
+                    ProductCount = grouped.Select(x => x.p.ProductId).Count(),
+                    Products = grouped.Select(x => x.p).Take(3)
+                }).ToListAsync();
 
             return View(model);
         }

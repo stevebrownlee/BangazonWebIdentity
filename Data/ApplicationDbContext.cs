@@ -2,17 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Bangazon.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Bangazon.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {}
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options) {}
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        // public DbSet<ApplicationRole> Roles { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<ProductType> ProductType { get; set; }
 
@@ -22,7 +24,27 @@ namespace Bangazon.Data
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
+            modelBuilder.Entity<Order>()
+                .Property(b => b.DateCreated)
+                .HasDefaultValueSql("strftime('%Y-%m-%d %H:%M:%S')");
+
+            // Restrict deletion of related order when LineItem entry is removed
+            modelBuilder.Entity<Order>()
+                .HasMany(o => o.LineItems)
+                .WithOne(l => l.Order)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Product>()
+                .Property(b => b.DateCreated)
+                .HasDefaultValueSql("strftime('%Y-%m-%d %H:%M:%S')");
+
+            // Restrict deletion of related product when LineItem entry is removed
+            modelBuilder.Entity<Product>()
+                .HasMany(o => o.LineItems)
+                .WithOne(l => l.Product)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<PaymentType>()
                 .Property(b => b.DateCreated)
                 .HasDefaultValueSql("strftime('%Y-%m-%d %H:%M:%S')");
         }
