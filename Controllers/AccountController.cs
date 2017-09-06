@@ -247,7 +247,7 @@ namespace Bangazon.Controllers
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
-            return RedirectToAction(nameof(ProductsController.Index), "Home");
+            return RedirectToAction(nameof(ProductsController.Index), "Products");
         }
 
         [HttpPost]
@@ -335,7 +335,7 @@ namespace Bangazon.Controllers
         {
             if (userId == null || code == null)
             {
-                return RedirectToAction(nameof(ProductsController.Index), "Home");
+                return RedirectToAction(nameof(ProductsController.Index), "Products");
             }
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
@@ -455,7 +455,7 @@ namespace Bangazon.Controllers
             }
             else
             {
-                return RedirectToAction(nameof(ProductsController.Index), "Home");
+                return RedirectToAction(nameof(ProductsController.Index), "Products");
             }
         }
 

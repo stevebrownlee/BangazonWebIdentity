@@ -6,14 +6,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Bangazon.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Bangazon.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext(DbContextOptions options):base(options) {}
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options) {}
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
-        public DbSet<ApplicationRole> Roles { get; set; }
+        // public DbSet<ApplicationRole> Roles { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<Order> Order { get; set; }
         public DbSet<PaymentType> PaymentType { get; set; }
