@@ -1,0 +1,27 @@
+@model Bangazon.Models.OrderViewModels.OrderDetailViewModel
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<h2>Shopping Cart</h2>
+
+<h3>Order #@Html.DisplayFor(model => model.Order.OrderId)</h3>
+
+@foreach (Bangazon.Models.OrderViewModels.OrderLineItem li in Model.LineItems)
+{
+    <div class="row">
+        <div class="col-md-6">
+            <a asp-controller="Products" asp-action="Detail" asp-route-id="@li.Product.ProductId">
+                @li.Product.Title
+            </a>
+        </div>
+        <div class="col-md-3">
+            @li.Units
+        </div>
+        <div class="col-md-3">
+            @li.Cost.ToString("C")
+        </div>
+    </div>
+}
+

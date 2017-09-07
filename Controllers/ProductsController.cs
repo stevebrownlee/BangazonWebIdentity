@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using System;
-using BangazonAuth.Models;
 
 namespace Bangazon.Controllers
 {
@@ -61,6 +60,52 @@ namespace Bangazon.Controllers
             }
 
             return View(model); 
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Purchase(int id)
+        {
+            // Find the product requested
+            Product productToAdd = await _context.Product.SingleOrDefaultAsync(p => p.ProductId == id);
+
+            // Get the current user
+            var user = await GetCurrentUserAsync();
+
+            // Get open order, if exists, otherwise null
+            var openOrder = await _context.Order.SingleOrDefaultAsync(o => o.User == user && o.PaymentTypeId == null);
+
+            // Didn't find an open order
+            if (openOrder == null)
+            {
+
+                // Create new order
+                Order newOrder = new Order(){ User = user };
+                _context.Add(newOrder);
+
+                // Create new line item
+                LineItem li = new LineItem(){
+                    Order = newOrder,
+                    Product = productToAdd
+                };
+                _context.Add(li);
+
+            // Open order exists
+            } else {
+
+                // Create new line item
+                LineItem li = new LineItem(){
+                    Order = openOrder,
+                    Product = productToAdd
+                };
+                _context.Add(li);
+
+            }
+
+            // Save all items in the db context
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(OrderController.Index), "Order");
         }
 
         [HttpGet]

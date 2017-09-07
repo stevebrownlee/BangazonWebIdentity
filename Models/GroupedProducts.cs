@@ -1,7 +1,7 @@
 ﻿using Bangazon.Models;
 using System.Collections.Generic;
 
-namespace BangazonAuth.Models
+namespace Bangazon.Models
 {
     public class GroupedProducts
     {
