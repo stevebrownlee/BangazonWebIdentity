@@ -9,6 +9,7 @@ using Bangazon.Data;
 using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
 using Bangazon.Models.OrderViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bangazon.Controllers
 {
@@ -25,8 +26,8 @@ namespace Bangazon.Controllers
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
-
         // GET: Order
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             OrderDetailViewModel model = new OrderDetailViewModel();
@@ -52,8 +53,9 @@ namespace Bangazon.Controllers
             return View(model);
         }
 
-        // GET: Order/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: Order/Cancel
+        [Authorize]
+        public async Task<IActionResult> Cancel(int? id)
         {
             if (id == null)
             {
@@ -61,26 +63,6 @@ namespace Bangazon.Controllers
             }
 
             var order = await _context.Order
-                .Include(o => o.PaymentType)
-                .SingleOrDefaultAsync(m => m.OrderId == id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return View(order);
-        }
-
-        // GET: Order/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Order
-                .Include(o => o.PaymentType)
                 .SingleOrDefaultAsync(m => m.OrderId == id);
 
             if (order == null)
@@ -88,7 +70,7 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
-            return View(order);
+            return RedirectToAction(nameof(ProductsController.Index), "Products");
         }
 
         // POST: Order/Delete/5
