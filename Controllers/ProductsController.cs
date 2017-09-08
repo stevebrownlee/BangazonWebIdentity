@@ -62,9 +62,8 @@ namespace Bangazon.Controllers
             return View(model); 
         }
 
-        [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Purchase(int id)
+        public async Task<IActionResult> Purchase([FromRoute] int id)
         {
             // Find the product requested
             Product productToAdd = await _context.Product.SingleOrDefaultAsync(p => p.ProductId == id);
