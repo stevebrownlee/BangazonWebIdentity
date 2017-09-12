@@ -11,7 +11,7 @@ using System;
 namespace BangazonAuth.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20170906040325_Initial")]
+    [Migration("20170912033724_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -154,7 +154,7 @@ namespace BangazonAuth.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("DateCreated")
-                        .ValueGeneratedOnAdd()
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasDefaultValueSql("strftime('%Y-%m-%d %H:%M:%S')");
 
                     b.Property<string>("Description")
