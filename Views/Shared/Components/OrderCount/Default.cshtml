@@ -1,1 +1,16 @@
-<a asp-controller="Order" asp-action="Index" title="Order">Your Cart (@ViewData["OrderCount"])</a>
+@model Bangazon.ViewComponents.OrderCountViewModel
+
+<a href="#" id="nav-shopping-cart">Cart (@Model.OrderCount)</a>
+
+<article class="cart cart--floating">
+@foreach (var item in Model.LineItems)
+{
+    <section>@item.Product.Title</section>
+}
+
+    <section class="cart__detailLink">
+        <a asp-controller="Order" asp-action="Index" title="Order" id="nav-shopping-cart">
+            View Details
+        </a>
+    </section>
+</article>

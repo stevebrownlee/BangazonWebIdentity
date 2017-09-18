@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bangazon.Data;
@@ -8,6 +9,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bangazon.ViewComponents
 {
+    public class OrderCountViewModel
+    {
+        public int OrderCount { get; set; }
+        public IEnumerable<LineItem> LineItems { get; set; }
+    }
+
     /*
         ViewComponent for displaying the shopping cart link & count in 
         the navigation bar.
@@ -28,17 +35,28 @@ namespace Bangazon.ViewComponents
             // Get the current, authenticated user
             ApplicationUser user = await _userManager.GetUserAsync(HttpContext.User);
 
+            // Instantiate view model
+            OrderCountViewModel model = new OrderCountViewModel();
+
             /*
                 Since I'm just getting the count of line items in this
                 order, there's no need for a custom type. Just put the 
                 integer in ViewData.
              */
-            ViewData["OrderCount"] = await _context.Order
-                .Where(o => o.User == user && o.PaymentType == null)
-                .SelectMany(o => o.LineItems).CountAsync()
+            var order = await _context.Order
+                .Include("LineItems.Product")
+                .SingleOrDefaultAsync(o => o.User == user && o.PaymentType == null)
                 ;
-            
-            return View();
+
+            if (order != null)
+            {
+                model.LineItems = order.LineItems;
+                model.OrderCount = order.LineItems.Count;
+            } else {
+                model.LineItems = new List<LineItem>();
+                model.OrderCount = 0;
+            }
+            return View(model);
         }
     }
 }

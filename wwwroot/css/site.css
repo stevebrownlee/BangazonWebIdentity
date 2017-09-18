@@ -48,3 +48,16 @@ textarea {
     display: none
   }
 }
+
+.cart--floating {
+    display: none;
+    top: 55px;
+    padding: 8px;
+    position: absolute;
+    width: 150%;
+    border: 1px ghostwhite solid;
+}
+
+.cart__detailLink {
+    margin: 5px 0;
+}
