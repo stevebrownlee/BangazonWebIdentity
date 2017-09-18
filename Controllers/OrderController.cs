@@ -53,35 +53,23 @@ namespace Bangazon.Controllers
             return View(model);
         }
 
-        // GET: Order/Cancel
-        [Authorize]
-        public async Task<IActionResult> Cancel(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Order
-                .SingleOrDefaultAsync(m => m.OrderId == id);
-
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return RedirectToAction(nameof(ProductsController.Index), "Products");
-        }
-
-        // POST: Order/Delete/5
+        // POST: Order/Cancel
         [HttpPost, ActionName("Cancel")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var lineItems = await _context.LineItem.Where(l => l.OrderId == id).ToListAsync();
+
+            foreach (var item in lineItems)
+            {
+                _context.LineItem.Remove(item);
+            }
+
             var order = await _context.Order.SingleOrDefaultAsync(m => m.OrderId == id);
             _context.Order.Remove(order);
+
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(ProductsController.Index), "Products");
         }
 
         private bool OrderExists(int id)
