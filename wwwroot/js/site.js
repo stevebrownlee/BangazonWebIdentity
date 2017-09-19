@@ -2,5 +2,5 @@
 
 $("#nav-shopping-cart").on("click", function (evt) {
   evt.preventDefault();
-  $(".cart--floating").slideToggle();
+  $(".minicart").slideToggle(333);
 })
