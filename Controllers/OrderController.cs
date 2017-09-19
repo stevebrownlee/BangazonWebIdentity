@@ -34,8 +34,7 @@ namespace Bangazon.Controllers
             
             var user = await GetCurrentUserAsync();
 
-            var order = _context
-                .Order
+            var order = _context.Order
                 .Where(o => o.User == user && o.PaymentType == null);
 
             model.Order = await order.SingleOrDefaultAsync();

@@ -54,8 +54,9 @@ textarea {
     top: 55px;
     padding: 8px;
     position: absolute;
-    width: 150%;
+    width: 200%;
     border: 1px ghostwhite solid;
+    font-size: 0.7em;
 }
 
 .cart__detailLink {

@@ -3,10 +3,10 @@
 <a href="#" id="nav-shopping-cart">Cart (@Model.OrderCount)</a>
 
 <article class="cart cart--floating">
-@foreach (var item in Model.LineItems)
-{
-    <section>@item.Product.Title</section>
-}
+    @foreach (var item in Model.LineItems)
+    {
+    <section>(@item.Units) @item.Product.Title @item.Cost.ToString("C")</section>
+    }
 
     <section class="cart__detailLink">
         <a asp-controller="Order" asp-action="Index" title="Order" id="nav-shopping-cart">
