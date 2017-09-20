@@ -37,7 +37,13 @@
             </div>
         </div>
     </div>
-    @await Component.InvokeAsync("MiniCart")
+
+    @inject SignInManager<ApplicationUser> SignInManager
+    @if (SignInManager.IsSignedIn(User))
+    {
+        @await Component.InvokeAsync("MiniCart")
+    }
+    
     <div class="container body-content">
         @RenderBody()
         <hr />
