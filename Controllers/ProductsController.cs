@@ -10,16 +10,29 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using System;
+using Bangazon.Services;
 
 namespace Bangazon.Controllers
 {
     public class ProductsController : Controller
     {
+        // Stores private reference to Identity Framework user manager
         private readonly UserManager<ApplicationUser> _userManager;
 
-        private ApplicationDbContext _context;
-        public ProductsController(ApplicationDbContext ctx, UserManager<ApplicationUser> userManager)
+        /**
+            Stores private reference to ApplicationConfiguration settings
+            section of appsettings.json
+         */
+        private readonly IApplicationConfiguration _appSettings;
+
+        // Stores private reference to EF-created database context
+        private readonly ApplicationDbContext _context;
+
+        public ProductsController(IApplicationConfiguration appSettings,
+                                  ApplicationDbContext ctx,
+                                  UserManager<ApplicationUser> userManager)
         {
+            _appSettings = appSettings;
             _userManager = userManager;
             _context = ctx;
         }
@@ -33,7 +46,7 @@ namespace Bangazon.Controllers
             ProductListViewModel model = new ProductListViewModel();
 
             // Set the properties of the view model
-            model.Products = await _context.Product.ToListAsync(); 
+            model.Products = await _context.Product.ToListAsync();
             return View(model);
         }
 
@@ -59,7 +72,7 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
-            return View(model); 
+            return View(model);
         }
 
         [Authorize]
@@ -123,7 +136,7 @@ namespace Bangazon.Controllers
                 model.UserRole = role.ToString();
             }
 
-            return View(model); 
+            return View(model);
         }
 
         [HttpPost]
@@ -138,8 +151,8 @@ namespace Bangazon.Controllers
             if (ModelState.IsValid)
             {
                 /*
-                    If all other properties validation, then grab the 
-                    currently authenticated user and assign it to the 
+                    If all other properties validation, then grab the
+                    currently authenticated user and assign it to the
                     product before adding it to the db _context
                 */
                 var user = await GetCurrentUserAsync();
